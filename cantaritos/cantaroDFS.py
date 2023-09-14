@@ -16,13 +16,15 @@ class Grafo:
 
 
     # Una función utilizada por DFS
-    def DFSUtil(self, v, visitados, meta, lvl):
+    def DFSUtil(self, v, visitados, meta):
         # Marcar el nodo actual como visitado
         # e imprimirlo
         visitados.add(v)
+        #Guarda el nodo actual en el camino
         camino.append(v)
         #print(v, end=' ')
         global metaAlcanz
+        #Si el nodo actual es la meta entonces activa la bandera
         if(v==meta):
             metaAlcanz=True
         # Recorrer todos los vértices
@@ -30,8 +32,10 @@ class Grafo:
         for vecino in self.grafo[v]:
             if metaAlcanz==False:
                 if vecino not in visitados:
-                    self.DFSUtil(vecino, visitados, meta, lvl+1)
-                    print(vecino, lvl)
+                    self.DFSUtil(vecino, visitados, meta)
+                    if(metaAlcanz==False):
+                        #Si al terminar de recorrer toda la rama aun no se alcanzo la meta entonces saca los nodos del camino
+                        camino.pop()
 
 
     # La función para hacer el recorrido DFS. Utiliza
@@ -42,7 +46,7 @@ class Grafo:
 
         # Llamar a la función auxiliar recursiva
         # para imprimir el recorrido DFS
-        self.DFSUtil(v, visitados, meta, 1)
+        self.DFSUtil(v, visitados, meta)
         print("")
         for x in camino:
             print(x, end=' ')
@@ -73,4 +77,4 @@ if __name__ == "__main__":
 print("A continuación se muestra el recorrido DFS (comenzando desde el vértice A)")
 
 # Llamada a la función
-g.DFS('A','C')
+g.DFS('A','L')
