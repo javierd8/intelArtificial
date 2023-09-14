@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+metaAlcanz = False
+camino = []
 
 # Constructor
 class Grafo:
@@ -14,11 +16,12 @@ class Grafo:
 
 
     # Una función utilizada por DFS
-    def DFSUtil(self, v, visitados, meta):
+    def DFSUtil(self, v, visitados, meta, lvl):
         # Marcar el nodo actual como visitado
         # e imprimirlo
         visitados.add(v)
-        print(v, end=' ')
+        camino.append(v)
+        #print(v, end=' ')
         global metaAlcanz
         if(v==meta):
             metaAlcanz=True
@@ -27,9 +30,8 @@ class Grafo:
         for vecino in self.grafo[v]:
             if metaAlcanz==False:
                 if vecino not in visitados:
-                    self.DFSUtil(vecino, visitados, meta)
-                else:
-                    visitados.remove(v)
+                    self.DFSUtil(vecino, visitados, meta, lvl+1)
+                    print(vecino, lvl)
 
 
     # La función para hacer el recorrido DFS. Utiliza
@@ -40,31 +42,35 @@ class Grafo:
 
         # Llamar a la función auxiliar recursiva
         # para imprimir el recorrido DFS
-        self.DFSUtil(v, visitados, meta)
+        self.DFSUtil(v, visitados, meta, 1)
         print("")
-        for x in visitados:
+        for x in camino:
             print(x, end=' ')
 
-metaAlcanz = False
 if __name__ == "__main__":
     #A=0 D=1 H=2 B=3 J=4
     #K=5 L=6 F=7 C=8 E=9 Z=10 W=11 G=12
     g = Grafo()
-    g.agregarArista(0,1)
-    g.agregarArista(0,7)
-    g.agregarArista(0,12)
-    g.agregarArista(1,2)
-    g.agregarArista(1,4)
-    g.agregarArista(2,3)
-    g.agregarArista(2,3)
-    g.agregarArista(4,5)
-    g.agregarArista(5,6)
-    g.agregarArista(7,8)
-    g.agregarArista(7,9)
-    g.agregarArista(9,10)
-    g.agregarArista(9,11)
+    g.agregarArista('A','D')
+    g.agregarArista('A','F')
+    g.agregarArista('A','G')
+    
+    g.agregarArista('D','H')
+    g.agregarArista('D','J')
+    
+    g.agregarArista('H','B')
+    
+    g.agregarArista('J','K')
+    
+    g.agregarArista('K','L')
+    
+    g.agregarArista('F','C')
+    g.agregarArista('F','E')
+    
+    g.agregarArista('E','Z')
+    g.agregarArista('E','W')
 
-print("A continuación se muestra el recorrido DFS (comenzando desde el vértice 0)")
+print("A continuación se muestra el recorrido DFS (comenzando desde el vértice A)")
 
 # Llamada a la función
-g.DFS(0,6)
+g.DFS('A','C')
