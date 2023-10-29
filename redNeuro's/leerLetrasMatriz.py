@@ -48,7 +48,7 @@ dAscii = list(ascii.values())
 #Carga los datos de entrenamiento&prueba
 training_data = np.asarray(dLetra) #datos de entrenamiento que son los inputs
 target_data = np.asarray(dAscii) #salidas, datos de entrenamiento
-test = np.asarray([letra["A"],letra["A"],letra["A"],letra["A"]]) #datos de prueba, test input
+test = np.array([letra["T"],letra["E"],letra["S"],letra["T"]]) #datos de prueba, test input
 
 #Crea el modelo
 model = Sequential()
@@ -57,7 +57,7 @@ model.add(layers.Dense(1))
 
 #Carga(o no) un modelo existente sobreescribiendo el antes creado
 if(1): #Verdadero para cargar un modelo existente, Falso para generar uno nuevo con los datos de arriba
-  model = keras.models.load_model('location.keras')
+  model = keras.models.load_model('neuroRed.keras')
 
 # %tensorboard --logdir logs/fit
 #Logs (Despues de ejecutar este codigo correr el de arriba para abrir la interfaz)
@@ -81,4 +81,4 @@ for x in res:
   print (chr(int(x)))
 
 #Guarda el modelo en el path ingresado
-model.save('location.keras')
+model.save('neuroRed.keras')
