@@ -1,8 +1,10 @@
 import numpy as np
+from matplotlib import pyplot as plt
+from IPython.display import clear_output
 
 #from keras.models import Sequential
 #from keras.layers.core import Dense
-
+from tensorflow import optimizers
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 import tensorflow.keras.layers as layers
@@ -48,7 +50,7 @@ dAscii = list(ascii.values())
 #Carga los datos de entrenamiento&prueba
 training_data = np.asarray(dLetra) #datos de entrenamiento que son los inputs
 target_data = np.asarray(dAscii) #salidas, datos de entrenamiento
-test = np.array([letra["T"],letra["E"],letra["S"],letra["T"]]) #datos de prueba, test input
+test = np.array([letra["A"],letra["R"],letra["Q"],letra["U"],letra["I"],letra["T"],letra["E"],letra["C"],letra["T"],letra["U"],letra["R"],letra["A"]]) #datos de prueba, test input
 
 #Crea el modelo
 model = Sequential()
@@ -58,19 +60,27 @@ model.add(layers.Dense(1))
 #Carga(o no) un modelo existente sobreescribiendo el antes creado
 if(1): #Verdadero para cargar un modelo existente, Falso para generar uno nuevo con los datos de arriba
   model = keras.models.load_model('neuroRed.keras')
-
-# %tensorboard --logdir logs/fit
-#Logs (Despues de ejecutar este codigo correr el de arriba para abrir la interfaz)
-# Load the TensorBoard notebook extension
-%load_ext tensorboard
-import datetime
-!rm -rf ./logs/ #Borra logs anteriores
-log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-
+ 
 #Compila y entrena el modelo usando los datos de entrenamiento&prueba
 model.compile(loss='mean_squared_error',optimizer='adam',metrics=['binary_accuracy'])
-model.fit(training_data, target_data, epochs=500, callbacks=[tensorboard_callback])
+history = model.fit(training_data, target_data, epochs=500)
+predictions = model.predict(training_data)
+
+#Ploteo de Accuracy
+plt.plot(history.history["binary_accuracy"],label = "Train")
+plt.title("Model Accuracy")
+plt.ylabel("Accuracy")
+plt.xlabel("Epoch")
+plt.legend()
+plt.show()
+ 
+#Ploteo de Loss
+plt.plot(history.history["loss"],label = "Train")
+plt.title("Model Loss")
+plt.ylabel("Loss")
+plt.xlabel("Epoch")
+plt.legend()
+plt.show()
 
 #Evalua el modelo imprimiendo al final el resultado
 scores = model.evaluate(training_data, target_data)
@@ -78,7 +88,7 @@ print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
 res = model.predict(test).round()
 #print(res)
 for x in res:
-  print (chr(int(x)))
+  print (chr(int(x)),end='')
 
 #Guarda el modelo en el path ingresado
 model.save('neuroRed.keras')
