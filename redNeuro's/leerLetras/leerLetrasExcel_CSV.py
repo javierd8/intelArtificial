@@ -51,7 +51,7 @@ dAscii = list(ascii.values())
 #Lee el Excel (en formato csv)
 import pandas as pd
 #df = pd.read_excel(open('letras.xlsx', 'rb'),sheet_name='Hoja1') #Si la letra no esta hasta arriba a la derecha quitar el 'header=None'
-df = pd.read_csv('abecedario.csv',header=None) #Lee el csv derivado del excel
+df = pd.read_csv('word_IA.csv',header=None) #Lee el csv derivado del excel
 
 #Para un csv la dvd no tengo idea si estos dos funcionen
 #df = df.dropna() #Elimina celdas sin valores (NaN)
@@ -81,26 +81,26 @@ for r in range(0,5):
   itLetra=0
   #print(end='\n')
 input = np.array(dicLetra_Palabra.values())
-#print(input)
-
 
 #Carga los datos de entrenamiento&prueba
 training_data = np.asarray(dLetra) #datos de entrenamiento que son los inputs
 target_data = np.asarray(dAscii) #salidas, datos de entrenamiento
 test = np.asarray(list(dicLetra_Palabra.values())) #datos de prueba, test input
 
+#print(test)
+
 #Crea el modelo
 model = Sequential()
-model.add(layers.Dense(25000, input_dim=25 , activation='relu')) #Reminder: +Neuronas = +potencia && +tiempoEsperaEntreEpocas
+model.add(layers.Dense(2500, input_dim=25 , activation='relu')) #Reminder: +Neuronas = +potencia && +tiempoEsperaEntreEpocas
 model.add(layers.Dense(1))
 
 #Carga(o no) un modelo existente sobreescribiendo el antes creado
-if(1): #Verdadero para cargar un modelo existente, Falso para generar uno nuevo con los datos de arriba
+if(0): #Verdadero para cargar un modelo existente, Falso para generar uno nuevo con los datos de arriba
   model = keras.models.load_model('neuroRed.keras')
- 
+
 #Compila y entrena el modelo usando los datos de entrenamiento&prueba
 model.compile(loss='mean_squared_error',optimizer='adam',metrics=['binary_accuracy'])
-history = model.fit(training_data, target_data, epochs=500)
+history = model.fit(training_data, target_data, epochs=2000)
 predictions = model.predict(training_data)
 
 #Ploteo de Accuracy
@@ -110,7 +110,7 @@ plt.ylabel("Accuracy")
 plt.xlabel("Epoch")
 plt.legend()
 plt.show()
- 
+
 #Ploteo de Loss
 plt.plot(history.history["loss"],label = "Train")
 plt.title("Model Loss")
@@ -127,5 +127,41 @@ res = model.predict(test).round()
 for x in res:
   print (chr(int(x)),end='')
 
+#####
+
+#Matriz confusion
+from sklearn import metrics
+
+# Generar datos de ejemplo de etiquetas reales y predichas
+cor = []
+for x in test:
+  for i in letra:
+    #print(list(x))
+    #print(letra[i])
+    if letra[i] == list(x):
+      value = i
+  cor.append(value)
+
+#print(cor)
+correcto = []
+
+for x in cor:
+  correcto.append([ascii[x]])
+
+actual = correcto
+predicted = res
+
+# Crear la matriz de confusión utilizando sklearn
+confusion_matrix = metrics.confusion_matrix(actual, predicted)
+
+# Crear la visualización de la matriz de confusión
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix)
+
+# Graficar la matriz de confusión
+cm_display.plot()
+plt.show()
+
+#####
+
 #Guarda el modelo en el path ingresado
-model.save('neuroRed.keras')
+#model.save('neuroRed.keras')
