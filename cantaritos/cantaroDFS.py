@@ -1,7 +1,7 @@
 from collections import defaultdict
 
-#DFS
-#Depht First Search
+metaAlcanz = False
+camino = []
 
 metaAlcanz = False
 camino = []
@@ -25,7 +25,7 @@ class Grafo:
         visitados.add(v)
         #Guarda el nodo actual en el camino
         camino.append(v)
-        #print(v, end=' ') 
+        #print(v, end=' ')
         global metaAlcanz
         #Si el nodo actual es la meta entonces activa la bandera
         if(v==meta):
