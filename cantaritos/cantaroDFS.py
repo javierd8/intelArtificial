@@ -3,6 +3,9 @@ from collections import defaultdict
 metaAlcanz = False
 camino = []
 
+metaAlcanz = False
+camino = []
+
 # Constructor
 class Grafo:
     def __init__(self):
@@ -33,7 +36,7 @@ class Grafo:
             if metaAlcanz==False:
                 if vecino not in visitados:
                     self.DFSUtil(vecino, visitados, meta)
-                    if(metaAlcanz==False):
+                    if metaAlcanz==False:
                         #Si al terminar de recorrer toda la rama aun no se alcanzo la meta entonces saca los nodos del camino
                         camino.pop()
 
@@ -52,29 +55,54 @@ class Grafo:
             print(x, end=' ')
 
 if __name__ == "__main__":
-    #A=0 D=1 H=2 B=3 J=4
-    #K=5 L=6 F=7 C=8 E=9 Z=10 W=11 G=12
+    #Cantaritos (Arbol de 2 ramas)
     g = Grafo()
-    g.agregarArista('A','D')
-    g.agregarArista('A','F')
-    g.agregarArista('A','G')
-    
-    g.agregarArista('D','H')
-    g.agregarArista('D','J')
-    
-    g.agregarArista('H','B')
-    
-    g.agregarArista('J','K')
-    
-    g.agregarArista('K','L')
-    
-    g.agregarArista('F','C')
-    g.agregarArista('F','E')
-    
-    g.agregarArista('E','Z')
-    g.agregarArista('E','W')
+    #Lvl1
+    g.agregarArista('0,0','4,0')
+    g.agregarArista('0,0','0,3')
+    #Lvl2
+    g.agregarArista('4,0','1,3') 
+    g.agregarArista('0,3','3,0')
+    #Lvl3
+    g.agregarArista('1,3','4,3')
+    g.agregarArista('3,0','3,3')
+    #Lvl4
+    g.agregarArista('4,3','0,3')
+    g.agregarArista('3,3','4,2')
+    #Lvl5
+    g.agregarArista('0,3','3,0') 
+    g.agregarArista('4,2','4,3')
+    #Lvl6
+    g.agregarArista('3,0','3,3') 
+    g.agregarArista('4,3','4,0')
+    #Lvl7
+    g.agregarArista('3,3','4,2') 
+    g.agregarArista('4,0','1,3')
+    #Lvl8
+    g.agregarArista('4,2','0,2') 
+    g.agregarArista('1,3','1,0')
+    #Lvl9
+    g.agregarArista('0,2','2,0')
+    g.agregarArista('1,0','0,1')
+    #Lvl10
+    g.agregarArista('2,0','2,3')
+    g.agregarArista('0,1','4,1')
+    #Lvl11
+    g.agregarArista('2,3','4,1')
+    g.agregarArista('4,1','2,3')
+    #Lvl12
+    g.agregarArista('4,1','0,1')
+    g.agregarArista('2,3','2,0')
+    #Lvl13
+    g.agregarArista('0,1','1,0')
+    g.agregarArista('2,0','0,2')
+    #Lvl14
+    g.agregarArista('1,0','1,3')
 
-print("A continuación se muestra el recorrido DFS (comenzando desde el vértice A)")
 
-# Llamada a la función
-g.DFS('A','L')
+print("A continuación se muestra el recorrido DFS (comenzando desde el vértice 0,0)")
+
+# Llamada a la función (Para que una busqueda sea valida la meta debe tener un min(0) o max(4 o 3 dependiendo) en alguno de los cantaros)
+g.DFS('0,0','4,3')
+if not metaAlcanz:
+    print("La meta no es posible de alcanzar(No es valida)")
